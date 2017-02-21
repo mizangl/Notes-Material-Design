@@ -1,0 +1,135 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+  def globalConfiguration = rootProject.extensions.getByName("ext")
+
+  compileSdkVersion globalConfiguration.getAt("androidCompileSdkVersion")
+  buildToolsVersion globalConfiguration.getAt("androidBuildToolsVersion")
+
+  defaultConfig {
+    minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
+    targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
+
+    applicationId "com.mz.notesdesign"
+
+    applicationId globalConfiguration.getAt("androidApplicationId")
+    versionCode globalConfiguration.getAt("androidVersionCode")
+    versionName globalConfiguration.getAt("androidVersionName")
+
+    testInstrumentationRunner globalConfiguration.getAt("testInstrumentationRunner")
+    testApplicationId globalConfiguration.getAt("testApplicationId")
+  }
+
+  buildTypes {
+
+    debug {
+      minifyEnabled true
+      // Uses new built-in shrinker http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
+      useProguard false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+    }
+
+    release {
+      release {
+        minifyEnabled true
+        useProguard true
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+      }
+    }
+  }
+
+  productFlavors {
+    mock {
+      applicationIdSuffix = ".mock"
+    }
+    prod {
+
+    }
+  }
+
+  // Remove mockRelease as it's not needed.
+  android.variantFilter { variant ->
+    if(variant.buildType.name.equals('release')
+        && variant.getFlavors().get(0).name.equals('mock')) {
+      variant.setIgnore(true);
+    }
+  }
+
+  // Always show the result of every unit test, even if it passes.
+  testOptions.unitTests.all {
+    testLogging {
+      events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+    }
+  }
+}
+
+dependencies {
+  def appDependencies = rootProject.ext.appDependencies
+  def appTestDependencies = rootProject.ext.appTestDependencies
+  def domainDependencies = rootProject.ext.domainDependencies
+  def domainTestDependencies = rootProject.ext.domainTestDependencies
+  def dataTestDependencies = rootProject.ext.dataTestDependencies
+
+  compile appDependencies.butterKnife
+  compile appDependencies.recyclerView
+  compile appDependencies.cardView
+  compile appDependencies.design
+  compile appDependencies.androidAnnotations
+  compile appDependencies.glide
+  compile appDependencies.expresoIdling
+
+  apt domainDependencies.daggerCompiler
+  compile domainDependencies.dagger
+
+  compile dataDependencies.supportV7
+  compile dataDependencies.supportV4
+
+  // Dependencies for Android unit tests
+  androidTestCompile appTestDependencies.junit
+  androidTestCompile appTestDependencies.mockito
+  androidTestCompile appTestDependencies.dexmaker
+  androidTestCompile appTestDependencies.dexmakerMockito
+
+  //Espresso dependencies
+  androidTestCompile appTestDependencies.espresso
+  androidTestCompile appTestDependencies.espressoContrib
+  androidTestCompile appTestDependencies.espressoIntents
+
+  // Resolve conflicts between main and test APK:
+  androidTestCompile appDependencies.androidAnnotations
+  androidTestCompile dataDependencies.supportV7
+  androidTestCompile dataDependencies.supportV4
+  androidTestCompile appDependencies.recyclerView
+  androidTestCompile appDependencies.design
+
+  // Dependencies for local unit tests
+  testCompile dataTestDependencies.junit
+  testCompile dataTestDependencies.mockito
+  testCompile dataTestDependencies.hamcrest
+  testCompile dataTestDependencies.powerMockJunit
+  testCompile dataTestDependencies.powerMockMockito
+
+  /*
+  Resolves dependency versions across test and production APKs, specifically, transitive
+  dependencies. This is required since Espresso internally has a dependency on support-annotations.
+  */
+  configurations.all {
+    resolutionStrategy.force "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+  }
+
+  /*
+  All direct/transitive dependencies shared between your test and production APKs need to be
+  excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+  excluding these dependencies from your test configuration will result in an dex pre-verifier error
+  at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+  */
+  configurations.compile.dependencies.each { compileDependency ->
+    println "Excluding compile dependency: ${compileDependency.getName()}"
+    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+      configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+    }
+  }
+}
