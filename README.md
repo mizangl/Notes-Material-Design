@@ -1,2 +1,3 @@
-# Notes-Material-Design
-Using Material Design, Unit Test and UI Test
+# NotesApp
+
+Using **Material Design**, **Unit Test** and **UI Test**
