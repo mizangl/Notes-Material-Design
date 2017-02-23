@@ -82,6 +82,8 @@ dependencies {
   compile appDependencies.expresoIdling
 
   apt domainDependencies.daggerCompiler
+  apt appDependencies.butterKnifeCompiler
+
   compile domainDependencies.dagger
 
   compile dataDependencies.supportV7
