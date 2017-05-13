@@ -9,11 +9,18 @@
     <item name="colorPrimary">@color/colorPrimary</item>
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccent</item>
+    <item name="android:windowActionBarOverlay">true</item>
   </style>
 
   <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+  <style name="AppTheme.AppBarOverlayTransparent" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <item name="android:background">@android:color/transparent</item>
+  </style>
 
   <style name="Toolbar" parent="ThemeOverlay.AppCompat.ActionBar"/>
+
+  <style name="AppTheme.Note" parent="AppTheme"/>
+
 
   <style name="Widget.CardContent" parent="android:Widget">
     <item name="android:paddingLeft">16dp</item>
@@ -21,6 +28,19 @@
     <item name="android:paddingTop">24dp</item>
     <item name="android:paddingBottom">24dp</item>
     <item name="android:orientation">vertical</item>
+  </style>
+
+  <style name="AppTheme.Title" parent="TextAppearance.AppCompat.Title">
+    <item name="android:textColor">@color/primary_text</item>
+  </style>
+
+  <style name="AppTheme.Item" parent="TextAppearance.AppCompat.Title">
+    <item name="android:textColor">@android:color/white</item>
+    <item name="android:fontFamily">sans-serif</item>
+  </style>
+
+  <style name="AppTheme.SubTitle" parent="TextAppearance.AppCompat.Title">
+    <item name="android:textColor">@color/secondary_text</item>
   </style>
 
 </resources>

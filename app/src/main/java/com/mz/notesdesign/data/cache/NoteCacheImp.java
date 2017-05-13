@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import com.mz.notesdesign.data.entity.Note;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,7 +40,13 @@ import javax.inject.Singleton;
   }
 
   @Override public List<Note> get() {
-    return new ArrayList<>(DATA.values());
+    List<Note> notes = new ArrayList<>(DATA.values());
+    Collections.sort(notes, new Comparator<Note>() {
+      @Override public int compare(Note o1, Note o2) {
+        return o1.getTitle().compareTo(o2.getTitle());
+      }
+    });
+    return notes;
   }
 
   @Override public boolean isCached(@NonNull String id) {

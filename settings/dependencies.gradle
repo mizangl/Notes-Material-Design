@@ -1,4 +1,4 @@
-// Dependency versions. Helps keeping track of all versions in a single place.
+// Dependency versions.
 
 allprojects {
   repositories {
@@ -14,9 +14,9 @@ ext {
   androidCompileSdkVersion = 25
 
 
-  supportLibraryVersion = '25.1.0'
+  supportLibraryVersion = '25.1.1'
   guavaVersion = '18.0'
-  glideVersion = '3.6.1'
+  glideVersion = '3.7.0'
   daggerVersion = '2.7'
   butterKnifeVersion = '8.5.1'
   javaxAnnotationVersion = '1.0'

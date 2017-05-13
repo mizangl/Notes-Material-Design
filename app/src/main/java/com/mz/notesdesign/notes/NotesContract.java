@@ -1,5 +1,6 @@
 package com.mz.notesdesign.notes;
 
+import android.widget.ImageView;
 import com.mz.notesdesign.data.entity.Note;
 import java.util.List;
 
@@ -23,6 +24,10 @@ public interface NotesContract {
     void bind(View view);
     void loadNotes(boolean forceUpdate);
     void addNotes();
+  }
+
+  interface ItemActionsListener{
+    void onNoteItemClicked(ImageView imageView, Note note);
   }
 
 }

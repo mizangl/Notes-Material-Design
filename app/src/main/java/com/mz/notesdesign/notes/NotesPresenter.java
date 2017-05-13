@@ -1,6 +1,6 @@
 package com.mz.notesdesign.notes;
 
-import com.mz.notesdesign.data.api.DefaultCallback;
+import com.mz.notesdesign.data.repository.DefaultCallback;
 import com.mz.notesdesign.data.entity.Note;
 import com.mz.notesdesign.data.repository.NoteRepository;
 import com.mz.notesdesign.internal.di.ActivityScope;
